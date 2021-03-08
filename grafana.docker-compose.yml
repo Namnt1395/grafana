@@ -1,0 +1,39 @@
+version: "2"
+services:
+  #Install grafana
+  grafana:
+    image: grafana/grafana:7.0.1
+    user: "root"
+    ports:
+      - 3000:3000
+    volumes:
+      - /home/namnt/grafana:/var/lib/grafana
+      - /home/namnt/grafana:/etc/grafana
+      - /home/namnt/grafana/grafana.ini:/etc/grafana/grafana.ini
+  #Install cadvisor
+  cadvisor:
+    image: gcr.io/google-containers/cadvisor:latest
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    ports:
+      - 8088:8080
+  #Install Prometheus
+  prometheus:
+    image: prom/prometheus:v2.12.0
+    user: "root"
+    ports:
+      - 9090:9090
+    volumes:
+      - /home/namnt/grafana/prometheus:/etc/prometheus
+      - /home/namnt/grafana/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /home/namnt/grafana/prometheus:/prometheus
+    command:
+      --storage.tsdb.path=/prometheus
+      --storage.tsdb.retention.time=200h
+

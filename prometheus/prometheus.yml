@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - localhost:9091
+
+  - job_name: cadvisor
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['ip:8080','ip:8088']
+
+#  - job_name: node-exporter
+#    scrape_interval: 10s
+#    static_configs:
+#       - targets:
+#          - monitoring_node_exporter:9100
+
